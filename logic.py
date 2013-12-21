@@ -13,6 +13,6 @@ def Logic( n, site=None ):
         expr = 0x68EA
         return LUT4X2( expr, expr, site=s )
 
-    return fork( col( alu, (n+1)/2, site ), flat=True )
+    return flip( flat( col( alu, (n+1)/2, site ) ) )
 
 

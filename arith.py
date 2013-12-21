@@ -22,7 +22,7 @@ def Arith( n, site=None ):
         expr = 'A ^ ((~C & B) | (C & ~B))'
         return Add2(expr=expr, x=True, site=s)
 
-    arith = flip( FoldCarry( col( alu, n, site ) ) )
+    arith = flip( flat( CarryChain( col( alu, n, site ) ) ) )
 
 
     # I[0] SEL
@@ -37,11 +37,12 @@ def Arith( n, site=None ):
     carry = LUT3( expr, site=site.delta(0,n) )
     wire(carry.O, arith.CIN)
 
-    sel =  carry.I[0]
-    sub = [carry.I[1], arith.I[2]]
+    carryI = carry.I[0]
+    sel =  carryI[0]
+    sub = [carryI[1], arith.I[2]]
 
     # A, B, CIN, SEL, SUB
-    arith.I = [arith.I[0], arith.I[1], carry.I[2], sel, sub]
+    arith.I = [arith.I[0], arith.I[1], carryI[2], sel, sub]
     arith.O.append( arith.COUT )
 
     return arith

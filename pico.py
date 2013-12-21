@@ -47,7 +47,7 @@ expr = '(~A & ~(B^C)) | (A & ~(B^D))'
 cc = LUT( expr, site=(3,6) ) ( [zcflag, nflag, z.O, c.O] )
 jump = LUT( 'A & (~B | (B & C))', site=(3,7) )( [jumpinst, ccflag, cc] ) 
 
-regwr = LUT( 'A & ((B&C)|(~B&D))', site=(3,8) ) ([step,wflag,aluinst,ioinst]) 
+regwr = LUT( 'A & ((B&C)|(~B&D))', site=(3,8) ) ( [step,wflag,aluinst,ioinst] ) 
 zwr   = LUT( 'A & B', site=(3,9) ) ( [step, aluinst] )
 cwr   = zwr
 
@@ -57,7 +57,7 @@ wr = LUT('A &  B', site=(3,11)) ([ioinst, wflag])
 
 # sequencer
 seq = Sequencer( ADDRN, site=(0,0) ) # site must be even, ...
-pc = seq( [1, addr, jump], ce=step )
+pc = seq( 1, addr, jump, ce=step )
 inst = rom( pc, ce=step ) 
 
 # input
@@ -76,11 +76,11 @@ regomux = Mux( 2, N, site=(11,0) )
 
 raval, rbval = reg.O
 rbval = rmux( [[imm, rbval], iflag] ) 
-logicres = logicunit( [rbval, raval, op[0], op[1]] )
-arithres = arithunit( [raval, rbval, c.O, op[0], op[1]] )
-res = regomux( [[logicres, arithres[0:N]], arithinst] ) 
-res = regimux( [[res, inval], rd] )
-reg( [res, ra, rb, regwr] )
+logicres = logicunit( rbval, raval, op[0], op[1] )
+arithres = arithunit( raval, rbval, c.O, op[0], op[1] )
+res = regomux( [logicres, arithres[0:N]], arithinst ) 
+res = regimux( [res, inval], rd )
+reg( res, ra, rb, regwr )
 
 zval = Decode( 0, N, site=(2,1) )
 z( zval( res ), ce=zwr ) 
@@ -99,7 +99,7 @@ joystick = [ JOYSTICK['select'],
              JOYSTICK['right'], 
              0, 0, 0 ]
           
-imux( [[SWITCH, joystick, SWITCH, joystick], port[0:2]] )
+imux( [SWITCH, joystick, SWITCH, joystick], port[0:2] )
 
 portena = Decode( 0, N, site=(12, 0) )( port )
 portwr = LUT('A & B & C', site=(12, 1) )( [step, wr, portena] )
