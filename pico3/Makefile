@@ -1,4 +1,4 @@
-MAGMA = ~/proj/magma/bin/magma
+MAGMA = ~/git/magma/bin/magma
 
 TESTS = pico.xdl 
 
@@ -16,11 +16,12 @@ gold:
 	done
 
 clean: 
-	rm *.pyc *.bit *.pcf *.xdl *.gold
+	rm *.pyc *.bit *.pcf *.xdl
 	make -C build clean
 	rm *.bit
 
-%.xdl: %.py a.mem
+%.xdl: %.py ../asm/a.mem
+	rm -fr $*.pcf $*.xdl
 	${MAGMA} -o $@ -p $*.pcf $*
 	if [ -e $@.gold ] ; then \
 	    diff $@ $@.gold ; \

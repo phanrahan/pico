@@ -8,21 +8,23 @@ def Sequencer( n, site=None ):
 
     expr = '(C & B) | (~C & A)'
 
-    def counter(x, y, site):
+    def counter(x, y, s):
         # [VEC, LOAD] -> inc.O
-        return Counter2(expr=expr, full=False, cout=(y!=n-1), x=True, 
-            site=site)
+        co = False if y == n-1 else 'COUT'
+        return Counter2(expr=expr, cout=co, o=True, site=s)
 
-    c = flip( FoldCarry( col( counter, n, site ) ) )
+    c = flip( flat( CarryChain( col( counter, n, site ) ) ) )
+
+    assert( len(c.I) == 2 )
 
     # A = /LOAD
     # B = INCR
     inc = LUT2('(~A) & B', site=site.delta(0,n) )
-    wire(inc.O, c.CIN)
-    #wire(inc, c.CIN)
+    wire(inc, c.CIN)
 
     # U, I, L
-    I = [inc.I[1], c.I[0], [inc.I[0], c.I[1]]]
+    incI = inc.I[0]
+    I = [incI[1], c.I[0], [incI[0], c.I[1]]]
 
     return Module( I, c.O, ce=c.CE )
 

@@ -1,5 +1,27 @@
 from magma.shield.LogicStart import *
 
+# 
+# switch(S)  
+#  case 00: B     -> 0xA
+#  case 01: A | B -> 0xE
+#  case 10: A & B -> 0x8
+#  case 11: A ^ B -> 0x6
+#
+def Logic( n, site=None ):
+
+    site = make_site(site)
+
+    def alu( x, y, s ):
+        expr = 0x68EA
+        return LUT4X2( expr, expr, site=s )
+
+    f = flat( col( alu, (n+1)/2, site ) )
+    f = flip(f)
+    #print len(f.I), '4'
+    #print len(f.I[0]), '8'
+    return f
+
+
 # switch(S)  
 #  case 00: A+B
 #  case 01: A+B+Cin
@@ -20,9 +42,11 @@ def Arith( n, site=None ):
     #  out = A ^ ((~SUB & B) | (SUB & ~B))
     def alu(i, j, s):
         expr = 'A ^ ((~C & B) | (C & ~B))'
-        return Add2(expr=expr, x=True, site=s)
+        return CarryAdd2(expr=expr, site=s)
 
     arith = flip( flat( CarryChain( col( alu, n, site ) ) ) )
+    #print len(arith.I), '3'
+    #print len(arith.I[0]), '8'
 
 
     # I[0] SEL
@@ -42,8 +66,11 @@ def Arith( n, site=None ):
     sub = [carryI[1], arith.I[2]]
 
     # A, B, CIN, SEL, SUB
-    arith.I = [arith.I[0], arith.I[1], carryI[2], sel, sub]
+    arith.I =[arith.I[0], arith.I[1], carryI[2], sel, sub]
     arith.O.append( arith.COUT )
+
+    #print len(arith.I), '5'
+    #print len(arith.I[0]), '8'
 
     return arith
 

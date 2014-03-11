@@ -1,0 +1,7 @@
+*.pyc
+*.xdl
+*.pcf
+*.bit
+.AppleDouble
+.DS_Store
+_xmsgs
