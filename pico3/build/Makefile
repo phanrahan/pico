@@ -42,7 +42,7 @@ upload: test.bit
 	${PROG} -c
 
 clean:
-	rm -rf ${TARGET}.* fpga.pcf fpga.xdl fpga.ncd \
+	rm -fr ${TARGET}.* fpga.pcf fpga.xdl fpga.ncd \
         xdl.log netlist.lst parout.ncd parout.pad parout_pad.csv \
         parout_pad.txt parout.par parout.ptwx parout.unroutes \
         usage_statistics_webtalk.html  webtalk.log \

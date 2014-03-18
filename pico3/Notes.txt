@@ -1,7 +1,0 @@
-rom
-  comes up with INIT as the first value
-  needs one clock before reads from rom
-  set init to rom[0]
-
-
-
