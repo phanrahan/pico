@@ -16,11 +16,10 @@ gold:
 	done
 
 clean: 
-	rm *.pyc *.bit *.pcf *.xdl
+	rm -f *.pyc *.bit *.pcf *.xdl
 	make -C build clean
-	rm *.bit
 
-%.xdl: %.py ../asm/a.mem
+%.xdl: %.py a.mem
 	rm -fr $*.pcf $*.xdl
 	${MAGMA} -o $@ -p $*.pcf $*
 	if [ -e $@.gold ] ; then \

@@ -1,5 +1,5 @@
+from magma.wiring import *
 from magma.shield.LogicStart import *
-from magma.design import composei
 
 #
 # port = 0 SWITCH
@@ -28,19 +28,22 @@ def Input( N, site=None ):
 def Output( port, val, en, wr, N, site=None ):
 
     # LED
+    print 'wiring led'
     ena  = Decode( 0, N, site=(12, 0) )( port )
-    ce = LUT('A & B & C', site=(12, 1) )( [en, wr, ena] )
+    ce = LUT('A & B & C', site=(12, 1) )( en, wr, ena )
     led = Register( N, site=(12, 2) )
     wire( led( val, ce=ce ), LED )
 
     # ANODE and SEGMENT
+    print 'wiring anode'
     ena = Decode( 2, N, site=(14, 0) )( port )
-    ce = LUT('A & B & C', site=(14, 1) )( [en, wr, ena] )
+    ce = LUT('A & B & C', site=(14, 1) )( en, wr, ena )
     anode = Register( 4, init=[1,1,1,1], site=(14, 2) )
     wire( anode( val[0:4], ce=ce ), ANODE )
 
+    print 'wiring segment'
     ena = Decode( 3, N, site=(15, 0) )( port )
-    ce = LUT('A & B & C', site=(15, 1) )( [en, wr, ena] )
+    ce = LUT('A & B & C', site=(15, 1) )( en, wr, ena )
     segment = Register( N, site=(15, 2) )
     wire( segment( val, ce=ce ), SEGMENT )
 

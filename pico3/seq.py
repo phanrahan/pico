@@ -1,4 +1,6 @@
-from magma.shield.LogicStart import *
+from magma.wiring import *
+from mantle.spartan3 import *
+from mantle.spartan3.slices import col
 
 def Sequencer( n, site=None ):
 
@@ -11,7 +13,7 @@ def Sequencer( n, site=None ):
     def counter(x, y, s):
         # [VEC, LOAD] -> inc.O
         co = False if y == n-1 else 'COUT'
-        return Counter2(expr=expr, cout=co, o=True, site=s)
+        return Counter2(expr1=expr, cout=co, o=True, site=s)
 
     c = flip( flat( CarryChain( col( counter, n, site ) ) ) )
 

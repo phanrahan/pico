@@ -5,7 +5,7 @@ from seq import Sequencer
 from alu import Arith, Logic
 from IO import Input, Output
 
-mem = readmem('../asm/a.mem')
+mem = readmem('a.mem')
 
 #slow = Counter(16, carry=True, site=(30,10)) (1) [16]
 #select = debounce( JOYSTICK["select"], slow, site=(31,10) )

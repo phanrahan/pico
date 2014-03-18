@@ -15,8 +15,7 @@ def Logic( n, site=None ):
         expr = 0x68EA
         return LUT4X2( expr, expr, site=s )
 
-    f = flat( col( alu, (n+1)/2, site ) )
-    f = flip(f)
+    f = flip( flat( col( alu, (n+1)/2, site ) ) )
     #print len(f.I), '4'
     #print len(f.I[0]), '8'
     return f
@@ -41,8 +40,9 @@ def Arith( n, site=None ):
     # I[2] SUB
     #  out = A ^ ((~SUB & B) | (SUB & ~B))
     def alu(i, j, s):
-        expr = 'A ^ ((~C & B) | (C & ~B))'
-        return CarryAdd2(expr=expr, site=s)
+        e1 = 'A ^ ((~C & B) | (C & ~B))'
+        e2 = 'A'
+        return CarryAdd2(expr1=e1, expr2=e2, site=s)
 
     arith = flip( flat( CarryChain( col( alu, n, site ) ) ) )
     #print len(arith.I), '3'
