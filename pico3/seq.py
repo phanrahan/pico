@@ -1,27 +1,29 @@
 from magma.wiring import *
 from mantle.spartan3 import *
-from mantle.spartan3.slices import col
+from mantle.spartan3.slices import coln
 
 def Sequencer( n, site=None ):
 
     site = make_site(site)
 
-    n = (n+1)/2
-
     expr = '(C & B) | (~C & A)'
 
-    def counter(x, y, s):
-        # [VEC, LOAD] -> inc.O
-        co = False if y == n-1 else 'COUT'
-        return Counter2(expr1=expr, cout=co, o=True, site=s)
+    def counter(x, y, s, e):
+		# [VEC, LOAD] -> inc.O
+		ci = None
+		if y % 2 == 0:
+			ci = 'BX' if y == 0 else 'CIN'
+		co = None
+		if y % 2 == 1 and y != n-1:
+			co = 'COUT'
+		#print x, y, s, e, ci, co
+		return Counter1( expr1=expr, cin=ci, cout=co, o=True, site=s, elem=e )
 
-    c = flip( flat( CarryChain( col( counter, n, site ) ) ) )
-
-    assert( len(c.I) == 2 )
+    c = flip( flat( CarryChain( coln( counter, n, site ) ) ) )
 
     # A = /LOAD
     # B = INCR
-    inc = LUT2('(~A) & B', site=site.delta(0,n) )
+    inc = LUT2('(~A) & B', site=site.delta(0,n/2) )
     wire(inc, c.CIN)
 
     # U, I, L

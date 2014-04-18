@@ -9,16 +9,11 @@ from magma.shield.LogicStart import *
 #
 def Logic( n, site=None ):
 
-    site = make_site(site)
+    expr = 0x68EA
+    def alu( x, y, s, e ):
+        return LUT4( expr, site=s, elem=e )
 
-    def alu( x, y, s ):
-        expr = 0x68EA
-        return LUT4X2( expr, expr, site=s )
-
-    f = flip( flat( col( alu, (n+1)/2, site ) ) )
-    #print len(f.I), '4'
-    #print len(f.I[0]), '8'
-    return f
+    return flip( flat( coln( alu, n, site ) ) )
 
 
 # switch(S)  
@@ -33,18 +28,23 @@ def Arith( n, site=None ):
 
     site = make_site(site)
 
-    n = (n+1)/2
-
     # I[0] A
     # I[1] B
     # I[2] SUB
     #  out = A ^ ((~SUB & B) | (SUB & ~B))
-    def alu(i, j, s):
-        e1 = 'A ^ ((~C & B) | (C & ~B))'
-        e2 = 'A'
-        return CarryAdd2(expr1=e1, expr2=e2, site=s)
+    e1 = 'A ^ ((~C & B) | (C & ~B))'
+    e2 = 'A'
+    def alu( x, y, s, e ):
+        ci = None
+        if y % 2 == 0:
+            ci = 'BX' if y == 0 else 'CIN'
+        co = None
+        if y % 2 == 1:
+            co = 'YB' if y == n-1 else 'COUT'
+        #print x, y, s, e, ci, co
+        return CarryAdd(expr1=e1, expr2=e2, cin=ci, cout=co, site=s, elem=e)
 
-    arith = flip( flat( CarryChain( col( alu, n, site ) ) ) )
+    arith = flip( flat( CarryChain( coln( alu, n, site ) ) ) )
     #print len(arith.I), '3'
     #print len(arith.I[0]), '8'
 
@@ -58,7 +58,7 @@ def Arith( n, site=None ):
     #  SUB    0   1  1
     #  SUBC   1   1 ~C
     expr = '(~A & B) | (A & ((B & ~C) | (~B & C)))'
-    carry = LUT3( expr, site=site.delta(0,n) )
+    carry = LUT3( expr, site=site.delta(0,n/2) )
     wire(carry.O, arith.CIN)
 
     carryI = carry.I[0]
