@@ -71,8 +71,8 @@ inst "inst66" "SLICEL" , placed CLB_X1Y1 SLICE_X0Y0 ,
 inst "inst67" "SLICEL" , placed CLB_X1Y1 SLICE_X0Y1 ,
   cfg "CEINV::CE CLKINV::CLK CY0F::F1 CY0G::G1 CYINIT::CIN CYSELF::F CYSELG::G DXMUX::1 DYMUX::1 F::#LUT:D=0x6666 FFX::#FF FFX_INIT_ATTR::INIT0 FFY::#FF FFY_INIT_ATTR::INIT0 FXMUX::FXOR G::#LUT:D=0x6666 GYMUX::GXOR XUSED::0 YUSED::0 ";
 
-inst "inst69" "SLICEL" , placed CLB_X1Y2 SLICE_X0Y2 ,
-  cfg "COUTUSED::0 CY0G::G1 CYSELG::G G::#LUT:D=0x0000 ";
+inst "inst68" "SLICEL" , placed CLB_X1Y2 SLICE_X0Y2 ,
+  cfg "COUTUSED::0 CY0G::G1 CYSELG::G G::#LUT:D=0x0000 GYMUX::GXOR ";
 
 inst "inst70" "SLICEM" , placed CLB_X1Y2 SLICE_X0Y3 ,
   cfg "BXINV::BX BYINV::BY CLKINV::CLK COUTUSED::0 CY0F::0 CY0G::0 CYINIT::CIN CYSELF::F CYSELG::G DIF_MUX::BX DIG_MUX::BY F::#RAM:D=0x0000 FXMUX::FXOR G::#RAM:D=0x0000 GYMUX::GXOR SRINV::SR WF1USED::0 WF2USED::0 WF3USED::0 WF4USED::0 WG1USED::0 WG2USED::0 WG3USED::0 WG4USED::0 XUSED::0 YUSED::0 ";
@@ -152,9 +152,9 @@ net "VCC/vcc" vcc ,
   inpin "inst67" F4 ,
   inpin "inst67" G3 ,
   inpin "inst67" G4 ,
-  inpin "inst69" G2 ,
-  inpin "inst69" G3 ,
-  inpin "inst69" G4 ,
+  inpin "inst68" G2 ,
+  inpin "inst68" G3 ,
+  inpin "inst68" G4 ,
   inpin "inst71" F4 ,
   inpin "inst71" G4 ,
 ;
@@ -183,7 +183,7 @@ net "inst5/I" ,
 
 net "inst6/I" ,
   outpin "inst6" I ,
-  inpin "inst69" G1 ,
+  inpin "inst68" G1 ,
 ;
 
 net "inst7/I" ,
@@ -418,8 +418,8 @@ net "inst67/X" ,
   inpin "inst70" G3 ,
 ;
 
-net "inst69/COUT" ,
-  outpin "inst69" COUT ,
+net "inst68/COUT" ,
+  outpin "inst68" COUT ,
   inpin "inst70" CIN ,
 ;
 

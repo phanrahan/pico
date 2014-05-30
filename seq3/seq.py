@@ -14,7 +14,7 @@ def RAM( n, site=None ):
 
     def ram16( x, y, s, e ):
         ram = RAM16( 0, omux=None, o=None, site=s, elem=e )
-        return CARRY( ram, 'CIN', 'COUT', '0', site=s, elem=e )
+        return CARRY( ram, 'CIN', 'COUT', 0, site=s, elem=e )
 
 
     lut = LUT('A&~A', o=None, omux=None, site=site, elem='Y' )
