@@ -36,3 +36,17 @@ signed i
 11001010aaaaaaaaaa "jnc"
 11001011aaaaaaaaaa "jc"
 
+11100000aaaaaaaaaa "call" 
+11101000aaaaaaaaaa "callnz"
+11101001aaaaaaaaaa "callz"
+11101010aaaaaaaaaa "callnc"
+11101011aaaaaaaaaa "callc"
+
+11110000aaaaaaaaaa "ret" 
+11111000aaaaaaaaaa "retnz"
+11111001aaaaaaaaaa "retz"
+11111010aaaaaaaaaa "retnc"
+11111011aaaaaaaaaa "retc"
+
+
+

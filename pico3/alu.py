@@ -42,11 +42,9 @@ def Arith( n, site=None ):
         if y % 2 == 1:
             co = 'YB' if y == n-1 else 'COUT'
         #print x, y, s, e, ci, co
-        return CarryAdd(expr1=e1, expr2=e2, cin=ci, cout=co, site=s, elem=e)
+        return CarryAdd(e1, e2, ci, co, True, site=s, elem=e)
 
     arith = flip( flat( CarryChain( coln( alu, n, site ) ) ) )
-    #print len(arith.I), '3'
-    #print len(arith.I[0]), '8'
 
 
     # I[0] SEL
@@ -68,9 +66,6 @@ def Arith( n, site=None ):
     # A, B, CIN, SEL, SUB
     arith.I =[arith.I[0], arith.I[1], carryI[2], sel, sub]
     arith.O.append( arith.COUT )
-
-    #print len(arith.I), '5'
-    #print len(arith.I[0]), '8'
 
     return arith
 

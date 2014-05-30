@@ -7,7 +7,7 @@ from IO import Input, Output
 
 mem = readmem('a.mem')
 
-#slow = Counter(16, carry=True, site=(30,10)) (1) [16]
+#slow = Counter(16, cout=True, site=(30,10)) (1) [16]
 #select = debounce( JOYSTICK["select"], slow, site=(31,10) )
 #step = falling(select, site=(32,10))
 step = 1
@@ -40,29 +40,36 @@ insttype = inst[16:18]
 # type of instruction
 logicinst = LUT2( (1 << 0), site=(3,0) ) ( insttype )
 arithinst = LUT2( (1 << 1), site=(3,1) ) ( insttype )
-ioinst    = LUT2( (1 << 2), site=(3,2) ) ( insttype ) 
-jumpinst  = LUT2( (1 << 3), site=(3,3) ) ( insttype )
-aluinst   = LUT2( (1 << 0) | (1 << 1), site=(3,4) ) ( insttype )
+aluinst   = LUT2( (1 << 0) | (1 << 1), site=(3,2) ) ( insttype )
+ioinst    = LUT2( (1 << 2), site=(3,3) ) ( insttype ) 
+
+jumpinst = LUT2( 'A & B & ~C &  D', site=(3,4) ) (insttype[0], insttype[1], op[0], op[1])
+callinst = LUT2( 'A & B &  C &  D', site=(3,5) ) (insttype[0], insttype[1], op[0], op[1])
+retinst =  LUT2( 'A & B &  C & ~D', site=(3,6) ) (insttype[0], insttype[1], op[0], op[1])
 
 # condition codes
 expr = '(~A & ~(B^C)) | (A & ~(B^D))'
-cc = LUT( expr, site=(3,6) ) ( zcflag, nflag, z, c )
-jump = LUT( 'A & (~B | (B & C))', site=(3,7) )( jumpinst, ccflag, cc ) 
+cc = LUT( expr, site=(3,7) ) ( zcflag, nflag, z, c )
+
+expr = '(A | B) & (~C | (C & D))'
+jump = LUT(  expr, site=(3,8) )( callinst, jumpinst, ccflag, cc ) 
+push = LUT( 'A & (~B | (B & C))', site=(3,9)  )( callinst, ccflag, cc ) 
+pop =  LUT( 'A & (~B | (B & C))', site=(3,10) )( retinst, ccflag, cc ) 
 
 # register write, z and c write
-regwr = LUT( 'A & ((B&C)|(~B&D))', site=(3,8) ) ( step,wflag,aluinst,ioinst ) 
-zwr   = LUT( 'A & B', site=(3,9) ) ( step, aluinst )
+regwr = LUT( 'A & ((B&C)|(~B&D))', site=(3,11) ) ( step,wflag,aluinst,ioinst ) 
+zwr   = LUT( 'A & B', site=(3,12) ) ( step, aluinst )
 cwr   = zwr
 
 # io rd or wr
-iord = LUT('A & ~B', site=(3,10)) (ioinst, wflag)
-iowr = LUT('A &  B', site=(3,11)) (ioinst, wflag)
+iord = LUT('A & ~B', site=(3,13)) (ioinst, wflag)
+iowr = LUT('A &  B', site=(3,14)) (ioinst, wflag)
 
 
 # sequencer
 print 'Building sequencer'
 seq = Sequencer( ADDRN, site=(0,0) ) # site must be even, ...
-pc = seq( 1, addr, jump, ce=step )
+pc = seq( 1, jump, addr, push, pop, ce=step )
 inst = rom( pc, ce=step ) 
 
 # input
@@ -127,6 +134,7 @@ Output( rbval, raval, step, iowr, N, site=(12,0) )
 
 # debug
 #wire( pc[0:8], LED )
+#wire( [jump, push, pop], LED[0:3] )
 
 #wire( inst[12:18], LED )
 #wire( [aluinst, ioinst, jumpinst, 0, 0, 0, c, z], LED )

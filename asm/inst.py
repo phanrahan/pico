@@ -120,23 +120,69 @@ def out ( a, b ):
     b = checku ( b , 4 )
     emit( 0x23000 | (a<<8) | (b<<4) )
 
+CC = 1 << 13
+C = 1 << 11
+Z = 0
+N = 1 << 12
+
+JMP = 0x38000
+JMPCC = JMP | CC
 def jmp ( a ):
     a = checku ( a , 10 )
-    emit( 0x30000 | (a<<0) )
+    emit( JMP | a )
 
 def jnz ( a ):
     a = checku ( a , 10 )
-    emit( 0x32000 | (a<<0) )
+    emit( JMPCC | N | Z | a )
 
 def jz ( a ):
     a = checku ( a , 10 )
-    emit( 0x32400 | (a<<0) )
+    emit( JMPCC | Z | a )
 
 def jnc ( a ):
     a = checku ( a , 10 )
-    emit( 0x32800 | (a<<0) )
+    emit( JMPCC | N | C | a )
 
 def jc ( a ):
     a = checku ( a , 10 )
-    emit( 0x32c00 | (a<<0) )
+    emit( JMPCC | C | a )
+
+CALL = 0x3c000
+CALLCC = CALL | CC
+def call ( a ):
+    a = checku ( a , 10 )
+    emit( CALL | a )
+
+def callnz ( a ):
+    a = checku ( a , 10 )
+    emit( CALLCC | N | Z | a )
+
+def callz ( a ):
+    a = checku ( a , 10 )
+    emit( CALLCC | Z | a )
+
+def callnc ( a ):
+    a = checku ( a , 10 )
+    emit( CALLCC | N | C | a )
+
+def callc ( a ):
+    a = checku ( a , 10 )
+    emit( CALLC | C | a )
+
+RET = 0x34000
+RETCC = RET | CC
+def ret ( ):
+    emit( RET )
+
+def retnz ( ):
+    emit( RET | N | Z )
+
+def retz ( ):
+    emit( RETCC | Z )
+
+def retnc ( ):
+    emit( RETCC | N | C )
+
+def retc ( ):
+    emit( RETCC | C )
 

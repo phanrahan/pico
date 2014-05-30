@@ -21,11 +21,17 @@ mem = ADDRMAX * [0]
 
 pc = 0
 
-def assemble(prog):
-    global pc
+pass_ = 0
+labels = {}
 
+def assemble(prog):
+    global pc, pass_
+
+    pass_ = 0
     pc = 0
     prog()
+
+    pass_ = 1
     pc = 0
     prog()
 
@@ -35,24 +41,26 @@ def emit(x):
         mem[pc] = x
     pc += 1
 
-def declare(name):
-    globals[name] = 0
-
-def equ(name, value):
-    globals[name] = value
-
-def label(name):
-    globals[name] = pc
-
 def org(value):
     global pc
     pc = value
 
+def equ(name, value):
+    global labels
+    labels[name] = value
+
+def label(name=None):
+    global labels
+    if name:
+        if pass_ == 0:
+            labels[name] = pc
+        if pass_ == 1:
+            return labels[name]
+        return 0
+    return pc
+
 def word(value):
     emit(value)
-
-def getpc():
-    return pc
 
 # registers
 r0  = 0

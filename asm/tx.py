@@ -5,11 +5,11 @@ DELAY = -1
 
 def delay():
     movi(r1,DELAY)
-    loop1 = getpc()
+    loop1 = label()
     movi(r2,DELAY)
-    loop2 = getpc()
+    loop2 = label()
     movi(r3,DELAY)
-    loop3 = getpc()
+    loop3 = label()
     subi(r3,1)
     jnz(loop3)
     subi(r2,1)
@@ -19,7 +19,7 @@ def delay():
 
 def prog():
 
-    loop = getpc()
+    loop = label()
 
     mov(ord('h'), r0)
     delay()
