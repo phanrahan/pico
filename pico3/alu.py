@@ -1,6 +1,8 @@
 from magma.shield.LogicStart import *
 
 # 
+# [A[n], B[n], op0, op1] -> C[n]
+# 
 # switch(S)  
 #  case 00: B     -> 0xA
 #  case 01: A | B -> 0xE
@@ -13,16 +15,17 @@ def Logic( n, site=None ):
     def alu( x, y, s, e ):
         return LUT4( expr, site=s, elem=e )
 
-    return flip( flat( coln( alu, n, site ) ) )
+    return forkjoin( coln( alu, n, site ), 'jjff' )
 
 
+#
+#  [A[n], B[n], CIN, SUB, SEL] -> C[n]
+#
 # switch(S)  
 #  case 00: A+B
 #  case 01: A+B+Cin
 #  case 10: A-B
 #  case 11: A-B+Cin
-#
-#  [A, B, CIN, SUB, SEL] -> O
 #
 def Arith( n, site=None ):
 
@@ -44,7 +47,7 @@ def Arith( n, site=None ):
         #print x, y, s, e, ci, co
         return CarryAdd(e1, e2, ci, co, True, site=s, elem=e)
 
-    arith = flip( flat( CarryChain( coln( alu, n, site ) ) ) )
+    arith = forkjoin( CarryChain( coln( alu, n, site ) ), 'jjf' )
 
 
     # I[0] SEL
@@ -57,14 +60,13 @@ def Arith( n, site=None ):
     #  SUBC   1   1 ~C
     expr = '(~A & B) | (A & ((B & ~C) | (~B & C)))'
     carry = LUT3( expr, site=site.delta(0,n/2) )
-    wire(carry.O, arith.CIN)
+    wire(carry, arith.CIN)
 
-    carryI = carry.I[0]
-    sel =  carryI[0]
-    sub = [carryI[1], arith.I[2]]
+    sel =  carry.I[0]
+    sub = [carry.I[1], arith.I[2]]
 
     # A, B, CIN, SEL, SUB
-    arith.I =[arith.I[0], arith.I[1], carryI[2], sel, sub]
+    arith.I = [arith.I[0], arith.I[1], carry.I[2], sel, sub]
     arith.O.append( arith.COUT )
 
     return arith

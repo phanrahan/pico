@@ -13,17 +13,17 @@ def RAM( n, site=None ):
     site = make_site(site)
 
     def ram16( x, y, s, e ):
-        ram = RAM16( 0, omux=None, o=None, site=s, elem=e )
+        ram = RAM16( 0, o=False, site=s, elem=e )
         return CARRY( ram, 'CIN', 'COUT', 0, site=s, elem=e )
 
 
-    lut = LUT('A&~A', o=None, omux=None, site=site, elem='Y' )
-    lut = CARRY( lut, None, 'COUT', 'A', o=None, site=site, elem='Y' )
+    lut = LUT('A&~A', o=False, site=site, elem='Y' )
+    lut = CARRY( lut, None, 'COUT', 'A', False, site=site, elem='Y' )
 
     c = Wire()
     lut(c)
 
-    ram = flip3( join( CarryChain( coln( ram16, n, site.delta(0,1) ) ) ) )
+    ram = forkjoin( CarryChain( coln( ram16, n, site.delta(0,1) ) ), 'jff' )
     ram.I = [ram.I + [c]]
 
     wire( lut.COUT, ram.CIN )
