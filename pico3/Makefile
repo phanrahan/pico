@@ -1,10 +1,7 @@
-MAGMA = ~/git/magma/bin/magma
+MAGMA=~/git/magma/bin/magma
+DEVICE=xc3s250e
 
-TESTS = pico.xdl 
-
-# testseq.xdl testlogic.xdl testarith.xdl
-
-export PYTHONPATH=..
+TESTS = pico.xdl
 
 .PHONY: test gold clean
 
@@ -12,21 +9,22 @@ test: $(TESTS)
 
 gold:
 	for f in $(TESTS); do \
-	        cp $$f $$f.gold; \
+		cp $$f $$f.gold; \
 	done
 
-clean: 
-	rm -f *.pyc *.bit *.pcf *.xdl
+clean:
+	rm -f *.pyc *.xdl *.pcf *.bit
 	make -C build clean
 
-%.xdl: %.py a.mem
-	rm -fr $*.pcf $*.xdl
-	${MAGMA} -o $@ -p $*.pcf $*
+%.xdl: %.py
+	rm -f $*.pcf $*.xdl
+	${MAGMA} -d ${DEVICE} -o $@ -p $*.pcf $*
 	if [ -e $@.gold ] ; then \
-	    diff $@ $@.gold ; \
+		diff $@ $@.gold ; \
 	fi
 
 %.bit: %.xdl
+	make -C build clean
 	cp $< build/fpga.xdl
 	cp $*.pcf build/fpga.pcf
 	make -C build

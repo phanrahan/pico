@@ -1,8 +1,7 @@
-from magma.wiring import *
-from mantle.spartan3 import *
-from mantle.spartan3.slices import coln
-from mantle.spartan3.CLB import CARRY
 from magma.shield.LogicStart import *
+from mantle.spartan3.slices import col
+from mantle.spartan3.CLB import CARRY
+from mantle.spartan3.RAM import RAM16
 
 
 #
@@ -23,7 +22,7 @@ def RAM( n, site=None ):
     c = Wire()
     lut(c)
 
-    ram = forkjoin( CarryChain( coln( ram16, n, site.delta(0,1) ) ), 'jff' )
+    ram = forkjoin( col( ram16, n, site.delta(0,1) ), 'jff' )
     ram.I = [ram.I + [c]]
 
     wire( lut.COUT, ram.CIN )

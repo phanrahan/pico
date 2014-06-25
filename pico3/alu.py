@@ -1,4 +1,5 @@
 from magma.shield.LogicStart import *
+from mantle.spartan3.carry import CarryAdd
 
 # 
 # [A[n], B[n], op0, op1] -> C[n]
@@ -15,7 +16,7 @@ def Logic( n, site=None ):
     def alu( x, y, s, e ):
         return LUT4( expr, site=s, elem=e )
 
-    return forkjoin( coln( alu, n, site ), 'jjff' )
+    return forkjoin( col( alu, n, site ), 'jjff' )
 
 
 #
@@ -47,7 +48,7 @@ def Arith( n, site=None ):
         #print x, y, s, e, ci, co
         return CarryAdd(e1, e2, ci, co, True, site=s, elem=e)
 
-    arith = forkjoin( CarryChain( coln( alu, n, site ) ), 'jjf' )
+    arith = forkjoin( col( alu, n, site ), 'jjf' )
 
 
     # I[0] SEL

@@ -23,7 +23,7 @@ def RAM( n, site=None ):
     c = Wire()
     lut(c)
 
-    ram = forkjoin( CarryChain( coln( ram16, n, site.delta(0,1) ) ), 'jff' )
+    ram = forkjoin( coln( ram16, n, site.delta(0,1) ), 'jff' )
     ram.I = [ram.I + [c]]
 
     wire( lut.COUT, ram.CIN )

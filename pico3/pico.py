@@ -1,5 +1,6 @@
 from magma.shield.LogicStart import *
-from mantle.util import debounce, falling
+from mantle.util.edge import falling
+from mantle.io.debounce import debounce
 from mem import read as readmem
 from seq import Sequencer
 from alu import Arith, Logic
@@ -79,7 +80,7 @@ input = Input( N, site=(4,0) )
 # create reg, input mux, output mux
 print 'Building registers'
 regimux = Mux( 2, N, site=(5,0) )
-reg = DualPortRegister( N, site=(6,0) ) # site x must be even
+reg = DualPortRegisterBank( N, site=(6,0) ) # site x must be even
 regomux = Mux( 2, N, site=(7,0) )
 
 # register values
