@@ -1,9 +1,10 @@
 from pico import *
 from mem import save
 
+
 def prog():
 
-    ini( r0, 0)
+    ini(r0, 0)
     outi(r0, 0)
 
     jmp(0)

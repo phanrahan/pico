@@ -1,6 +1,8 @@
 import sys
 
+
 class Inst:
+
     def __init__(self, arch, pattern, action):
         self.pattern = pattern
         self.action = action
@@ -20,7 +22,7 @@ class Inst:
                 self.bitlength += 1
                 self.bits <<= 1
                 self.mask <<= 1
-                if c == '0' or c == '1' :
+                if c == '0' or c == '1':
                     arg = None
                     self.bits |= (c == '1')
                     self.mask |= (c == '0' or c == '1')
@@ -35,7 +37,9 @@ class Inst:
                     else:
                         arg['length'] += 1
 
+
 class Arch:
+
     def __init__(self, lines):
         self.instructions = []
         self.signed = {}
@@ -44,26 +48,26 @@ class Arch:
 
             if line.startswith('word'):
                 word = int(line.split()[1])
-                #print 'word', word
+                # print 'word', word
                 self.word = word
             elif line.startswith('signed'):
-                #print 'signed', line[7]
+                # print 'signed', line[7]
                 self.signed[line[7]] = True
             else:
                 pattern = ''
                 action = ''
                 for i in range(len(line)):
                     c = line[i]
-                    if c == ' ' or c == '\t': 
+                    if c == ' ' or c == '\t':
                         continue
                     elif c == '#' or c == '\n' or c == '\r':
                         break
-                    elif (c >= 'a' and c <= 'z') or c == '0' or c == '1': 
+                    elif (c >= 'a' and c <= 'z') or c == '0' or c == '1':
                         pattern = pattern + c
                     elif c == '"':
-                        rest = line[i+1:]
+                        rest = line[i + 1:]
                         n = rest.find('"')
                         action = rest[:n]
                         self.instructions += [Inst(self, pattern, action)]
                         break
-
+eak

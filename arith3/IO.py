@@ -1,3 +1,4 @@
+from magma.wiring import *
 from magma.shield.LogicStart import *
 
 #

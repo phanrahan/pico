@@ -1,6 +1,7 @@
 from pico import *
 from mem import save
 
+
 def prog():
     movi(r1, 1)
     outi(r1, 0)

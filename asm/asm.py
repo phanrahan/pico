@@ -1,6 +1,7 @@
 import sys
 from arch import Arch
 
+
 def instDump(arch, inst):
     args = inst.args
 
@@ -16,7 +17,7 @@ def instDump(arch, inst):
         else:
             print '   ', sym, '= checku (', sym, ',', n, ')'
 
-    s  = '    emit( ' + hex(inst.bits)
+    s = '    emit( ' + hex(inst.bits)
 
     for arg in args:
         sym = arg['sym']
@@ -41,14 +42,13 @@ print "from tiny import *"
 print
 
 for inst in arch.instructions:
-    #print inst.pattern, inst.bitlength,
-    #print "%x" % inst.bits,
-    #print "%x" % inst.mask
-    #for a in inst.args:
+    # print inst.pattern, inst.bitlength,
+    # print "%x" % inst.bits,
+    # print "%x" % inst.mask
+    # for a in inst.args:
     #    print "  ", a
 
     instDump(arch, inst)
 
     print
-
-
+t

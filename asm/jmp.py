@@ -1,13 +1,14 @@
 from pico import *
 from mem import save
 
+
 def prog():
     logn = 4
 
-    mov(r0,r0)
+    mov(r0, r0)
     for i in range(logn):
         n = (1 << i)
-        jmp( 2*n )
+        jmp(2 * n)
         for j in range(1, n):
             nop()
     jmp(1)
@@ -16,3 +17,4 @@ def prog():
 assemble(prog)
 
 save(mem, 'a.mem')
+)
