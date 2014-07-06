@@ -1,6 +1,3 @@
-from mem import save
-
-
 def checku(u, len):
     max = 1 << len
     assert(u < max)
@@ -37,6 +34,8 @@ def assemble(prog):
     pass_ = 1
     pc = 0
     prog()
+
+    return mem
 
 
 def emit(x):

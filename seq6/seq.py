@@ -1,7 +1,7 @@
 from magma.shield.LogicStart import *
-from mantle.spartan3.slices import col
-from mantle.spartan3.CLB import CARRY
-from mantle.spartan3.RAM import RAM16
+from mantle.spartan6.slices import col
+from mantle.spartan6.CLB import CARRY
+from mantle.spartan6.RAM import RAM16
 
 
 #

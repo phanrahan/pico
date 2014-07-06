@@ -1,5 +1,5 @@
 from magma.shield.LogicStart import *
-from mantle.spartan3.carry import CarryAddN
+from mantle.spartan6.carry import CarryAddN
 
 #
 # [A[n], B[n], op0, op1] -> C[n]
@@ -42,6 +42,20 @@ def Arith(n, site=None):
     e1 = 'A ^ ((~C & B) | (C & ~B))'
     e2 = 'A'
     arith = CarryAddN(n, e1, e2, True, True, True, 'jjf', site=site)
+
+    # def alu(x, y, s, e):
+    #    ci = None
+    #    if y % 4 == 0:
+    #        ci = True if y == 0 else 'CIN'
+    #    co = None
+    #    if y == n - 1:
+    #        co = True
+    #    elif y % 4 == 3:
+    #        co = 'COUT'
+    # print x, y, s, e, ci, co
+    #    return CarryAdd(e1, e2, ci, co, True, site=s, elem=e)
+
+    #arith = forkjoin(col(alu, n, site), 'jjf')
 
     # I[0] SEL
     # I[1] SUB

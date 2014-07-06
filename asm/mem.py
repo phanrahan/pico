@@ -44,5 +44,3 @@ def save(mem, filename):
 
 # mem = readmem( 'test0.mem' )
 # print mem[0:10]
-:
-    10]

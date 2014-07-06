@@ -1,3 +1,4 @@
+
 def read(filename):
     lines = open(filename).readlines()
     tokens = " ".join(lines).split()
@@ -44,5 +45,3 @@ def save(mem, filename):
 
 # mem = readmem( 'test0.mem' )
 # print mem[0:10]
-:
-    10]
